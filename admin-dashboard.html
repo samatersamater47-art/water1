@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Admin Dashboard | Water Bill Payment System</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .dashboard-section {
+            display: none;
+        }
+        .dashboard-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fas fa-tint"></i>
+                <h2>Water<span>Bill</span></h2>
+                <p>Super Admin Panel</p>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active" data-section="dashboard"><a href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li data-section="customers"><a href="#"><i class="fas fa-users"></i> Customers</a></li>
+                    <li data-section="bills"><a href="#"><i class="fas fa-file-invoice"></i> Bills</a></li>
+                    <li data-section="payments"><a href="#"><i class="fas fa-credit-card"></i> Payments</a></li>
+                    <li data-section="reports"><a href="#"><i class="fas fa-chart-line"></i> Reports</a></li>
+                    <li data-section="settings"><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="dashboard-header">
+                <div class="header-welcome">
+                    <i class="fas fa-waveform"></i> Welcome, Super Admin
+                </div>
+                <div class="header-actions">
+                    <button class="icon-btn" id="notificationsBtn"><i class="fas fa-bell"></i></button>
+                    <div class="user-dropdown">
+                        <button class="user-btn" id="userMenuBtn">
+                            <i class="fas fa-user-circle"></i> admin@water.com <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu" id="userDropdownMenu">
+                            <a href="#" id="changePasswordBtn"><i class="fas fa-key"></i> Change Password</a>
+                            <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- ======================= DASHBOARD SECTION ======================= -->
+            <div id="dashboardSection" class="dashboard-section active">
+                <!-- Statistics Cards (all zeros) -->
+                <section class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-users"></i></div>
+                        <div class="stat-info">
+                            <h3>Total Customers</h3>
+                            <p class="stat-value" id="totalCustomers">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-file-invoice"></i></div>
+                        <div class="stat-info">
+                            <h3>Total Bills</h3>
+                            <p class="stat-value" id="totalBills">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+                        <div class="stat-info">
+                            <h3>Monthly Revenue</h3>
+                            <p class="stat-value" id="monthlyRevenue">$0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                        <div class="stat-info">
+                            <h3>Pending Payments</h3>
+                            <p class="stat-value" id="pendingPayments">0</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Add New Customer Form -->
+                <section class="card form-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-user-plus"></i> Add New Customer</h3>
+                    </div>
+                    <form id="addCustomerFormDashboard">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>House / Meter Number *</label>
+                                <input type="text" id="meterNumberDash" placeholder="e.g., MTR-001" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Full Name *</label>
+                                <input type="text" id="fullNameDash" placeholder="Full name" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Phone Number *</label>
+                                <input type="tel" id="phoneDash" placeholder="+252 XX XXX XXXX" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email (optional)</label>
+                                <input type="email" id="emailDash" placeholder="customer@example.com">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Address / Zone *</label>
+                                <input type="text" id="addressDash" placeholder="e.g., 18 May Area" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Password *</label>
+                                <input type="password" id="customerPasswordDash" placeholder="Set password" required>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Add Customer</button>
+                            <button type="reset" class="btn-secondary">Clear</button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Customers Table (empty) -->
+                <section class="card table-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-list"></i> Registered Customers</h3>
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchCustomerDash" placeholder="Search by name or meter...">
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr><th>Meter Number</th><th>Full Name</th><th>Phone</th><th>Address / Zone</th><th>Actions</th></tr>
+                            </thead>
+                            <tbody id="customersTableBodyDash">
+                                <!-- empty, data will come from backend -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- ======================= CUSTOMERS SECTION ======================= -->
+            <div id="customersSection" class="dashboard-section">
+                <section class="card form-card">
+                    <div class="card-header"><h3><i class="fas fa-user-plus"></i> Add New Customer</h3></div>
+                    <form id="addCustomerFormCustomers">
+                        <div class="form-row">
+                            <div class="form-group"><label>House / Meter Number *</label><input type="text" id="meterNumberCust" placeholder="e.g., MTR-001" required></div>
+                            <div class="form-group"><label>Full Name *</label><input type="text" id="fullNameCust" placeholder="Full name" required></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Phone Number *</label><input type="tel" id="phoneCust" placeholder="+252 XX XXX XXXX" required></div>
+                            <div class="form-group"><label>Email (optional)</label><input type="email" id="emailCust" placeholder="customer@example.com"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Address / Zone *</label><input type="text" id="addressCust" placeholder="e.g., 18 May Area" required></div>
+                            <div class="form-group"><label>Password *</label><input type="password" id="customerPasswordCust" placeholder="Set password" required></div>
+                        </div>
+                        <div class="form-actions"><button type="submit" class="btn-primary">Add Customer</button><button type="reset" class="btn-secondary">Clear</button></div>
+                    </form>
+                </section>
+                <section class="card table-card">
+                    <div class="card-header"><h3><i class="fas fa-list"></i> Registered Customers</h3><div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchCustomerCust" placeholder="Search..."></div></div>
+                    <div class="table-responsive">
+                        <table class="data-table"><thead><tr><th>Meter Number</th><th>Full Name</th><th>Phone</th><th>Address</th><th>Actions</th></tr></thead><tbody id="customersTableBodyCust"></tbody></table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- ======================= BILLS SECTION ======================= -->
+            <div id="billsSection" class="dashboard-section">
+                <section class="card">
+                    <div class="card-header"><h3><i class="fas fa-file-invoice"></i> All Bills</h3><div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchBills" placeholder="Search by meter or name..."></div></div>
+                    <div class="table-responsive">
+                        <table class="data-table"><thead><tr><th>Bill Number</th><th>Meter Number</th><th>Customer</th><th>Month</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead><tbody id="billsTableBody"></tbody></table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- ======================= PAYMENTS SECTION ======================= -->
+            <div id="paymentsSection" class="dashboard-section">
+                <section class="card">
+                    <div class="card-header"><h3><i class="fas fa-credit-card"></i> Payment Transactions</h3><div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchPayments" placeholder="Search..."></div></div>
+                    <div class="table-responsive">
+                        <table class="data-table"><thead><tr><th>Receipt #</th><th>Meter Number</th><th>Customer</th><th>Amount</th><th>Method</th><th>Date</th><th>Status</th></tr></thead><tbody id="paymentsTableBody"></tbody></table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- ======================= REPORTS SECTION ======================= -->
+            <div id="reportsSection" class="dashboard-section">
+                <section class="card form-card">
+                    <div class="card-header"><h3><i class="fas fa-chart-line"></i> Generate Reports</h3></div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Report Type</label><select id="reportType"><option value="daily">Daily Collections</option><option value="monthly">Monthly Revenue</option><option value="yearly">Yearly Summary</option></select></div>
+                        <div class="form-group"><label>Date</label><input type="date" id="reportDate"></div>
+                    </div>
+                    <button class="btn-primary" id="generateReportBtn">Generate Report</button>
+                    <div id="reportPreview" style="margin-top:20px; padding:15px; background:var(--light); border-radius:12px; min-height:100px;">Select report type and date, then click generate.</div>
+                </section>
+            </div>
+
+            <!-- ======================= SETTINGS SECTION ======================= -->
+            <div id="settingsSection" class="dashboard-section">
+                <section class="card form-card">
+                    <div class="card-header"><h3><i class="fas fa-cog"></i> System Settings</h3></div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Water Rate per Unit ($)</label><input type="number" step="0.01" id="waterRate" value="1.50"></div>
+                        <div class="form-group"><label>Service Charge ($)</label><input type="number" step="0.01" id="serviceCharge" value="2.00"></div>
+                        <div class="form-group"><label>Due Days (after bill generation)</label><input type="number" id="dueDays" value="30"></div>
+                        <div class="form-group"><label>Late Fee (%)</label><input type="number" step="0.1" id="lateFee" value="5"></div>
+                    </div>
+                    <button class="btn-primary" id="saveSettingsBtn">Save Settings</button>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div id="changePwdModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header"><h3><i class="fas fa-key"></i> Change Password</h3><button class="close-modal" id="closeChangeModal">&times;</button></div>
+            <form id="changePasswordForm">
+                <div class="form-group"><label>Current Password</label><input type="password" id="currentPassword" required></div>
+                <div class="form-group"><label>New Password</label><input type="password" id="newPassword" required></div>
+                <div class="form-group"><label>Confirm New Password</label><input type="password" id="confirmPassword" required></div>
+                <div class="form-actions"><button type="submit" class="btn-primary">Update Password</button><button type="button" class="btn-secondary cancel-change">Cancel</button></div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- SIDEBAR SECTION SWITCHING ----------
+            const sections = {
+                dashboard: document.getElementById('dashboardSection'),
+                customers: document.getElementById('customersSection'),
+                bills: document.getElementById('billsSection'),
+                payments: document.getElementById('paymentsSection'),
+                reports: document.getElementById('reportsSection'),
+                settings: document.getElementById('settingsSection')
+            };
+            const navItems = document.querySelectorAll('.sidebar-nav li');
+            function activateSection(sectionId) {
+                Object.values(sections).forEach(section => section.classList.remove('active'));
+                sections[sectionId].classList.add('active');
+                navItems.forEach(li => li.classList.remove('active'));
+                document.querySelector(`.sidebar-nav li[data-section="${sectionId}"]`).classList.add('active');
+            }
+            navItems.forEach(li => {
+                const section = li.getAttribute('data-section');
+                li.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (section) activateSection(section);
+                });
+            });
+            // default dashboard active
+            activateSection('dashboard');
+
+            // ---------- ADD CUSTOMER (backend placeholder) ----------
+            function handleAddCustomer(formId, meterId, nameId, phoneId, addressId, pwdId, emailId) {
+                const form = document.getElementById(formId);
+                if (!form) return;
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const meter = document.getElementById(meterId).value.trim();
+                    const name = document.getElementById(nameId).value.trim();
+                    const phone = document.getElementById(phoneId).value.trim();
+                    const address = document.getElementById(addressId).value.trim();
+                    const pwd = document.getElementById(pwdId).value;
+                    if (!meter || !name || !phone || !address || !pwd) {
+                        alert('Please fill all required fields (*).');
+                        return;
+                    }
+                    alert(`Customer "${name}" will be saved to the database. This feature requires backend integration.`);
+                    form.reset();
+                });
+            }
+            handleAddCustomer('addCustomerFormDashboard', 'meterNumberDash', 'fullNameDash', 'phoneDash', 'addressDash', 'customerPasswordDash', 'emailDash');
+            handleAddCustomer('addCustomerFormCustomers', 'meterNumberCust', 'fullNameCust', 'phoneCust', 'addressCust', 'customerPasswordCust', 'emailCust');
+
+            // ---------- SEARCH (UI only, backend needed for real search) ----------
+            const searchFields = ['searchCustomerDash', 'searchCustomerCust', 'searchBills', 'searchPayments'];
+            searchFields.forEach(id => {
+                const input = document.getElementById(id);
+                if (input) {
+                    input.addEventListener('keyup', () => {
+                        alert('Search requires backend integration. Data will be filtered on the server.');
+                    });
+                }
+            });
+
+            // ---------- REPORT GENERATION (placeholder) ----------
+            const reportBtn = document.getElementById('generateReportBtn');
+            if (reportBtn) {
+                reportBtn.addEventListener('click', () => {
+                    const type = document.getElementById('reportType').value;
+                    const date = document.getElementById('reportDate').value || 'Not selected';
+                    document.getElementById('reportPreview').innerHTML = `<strong>${type.toUpperCase()} Report</strong><br>Date: ${date}<br>Report data will be fetched from backend.`;
+                });
+            }
+
+            // ---------- SETTINGS SAVE ----------
+            const saveBtn = document.getElementById('saveSettingsBtn');
+            if (saveBtn) {
+                saveBtn.addEventListener('click', () => {
+                    const rate = document.getElementById('waterRate').value;
+                    const service = document.getElementById('serviceCharge').value;
+                    const days = document.getElementById('dueDays').value;
+                    const fee = document.getElementById('lateFee').value;
+                    alert(`Settings saved (backend integration needed):\nRate: $${rate}\nService: $${service}\nDue Days: ${days}\nLate Fee: ${fee}%`);
+                });
+            }
+
+            // ---------- CHANGE PASSWORD MODAL ----------
+            const changeModal = document.getElementById('changePwdModal');
+            const changeBtn = document.getElementById('changePasswordBtn');
+            const closeChange = document.getElementById('closeChangeModal');
+            const cancelChange = document.querySelector('.cancel-change');
+            const changeForm = document.getElementById('changePasswordForm');
+
+            if (changeBtn) changeBtn.addEventListener('click', (e) => { e.preventDefault(); changeModal.classList.add('active'); });
+            if (closeChange) closeChange.addEventListener('click', () => changeModal.classList.remove('active'));
+            if (cancelChange) cancelChange.addEventListener('click', () => changeModal.classList.remove('active'));
+            if (changeModal) changeModal.addEventListener('click', (e) => { if (e.target === changeModal) changeModal.classList.remove('active'); });
+            if (changeForm) {
+                changeForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const curr = document.getElementById('currentPassword').value;
+                    const newPwd = document.getElementById('newPassword').value;
+                    const confirm = document.getElementById('confirmPassword').value;
+                    if (newPwd !== confirm) { alert('New passwords do not match.'); return; }
+                    if (newPwd.length < 6) { alert('Password must be at least 6 characters.'); return; }
+                    alert('Password change request sent. Backend integration required.');
+                    changeModal.classList.remove('active');
+                    changeForm.reset();
+                });
+            }
+
+            // ---------- USER DROPDOWN ----------
+            const userBtn = document.getElementById('userMenuBtn');
+            const userDropdown = document.getElementById('userDropdownMenu');
+            if (userBtn && userDropdown) {
+                userBtn.addEventListener('click', (e) => { e.stopPropagation(); userDropdown.classList.toggle('show'); });
+                document.addEventListener('click', () => userDropdown.classList.remove('show'));
+            }
+        })();
+    </script>
+</body>
+</html> 
